@@ -10,7 +10,7 @@ class CommandLineArgsParser(hdfsUtils: HDFSUtils) {
 
     opt[Long]('b', "blockSize")
       .optional()
-      .text("Specify your clusters blockSize in bytes, Default is set at 131072000")
+      .text("Specify your clusters blockSize in bytes, Default is set at 132120576")
       .action((blockSize, commandLineOpts) => commandLineOpts.copy(blockSize = blockSize))
 
     opt[String]('f', "format")
@@ -47,6 +47,11 @@ class CommandLineArgsParser(hdfsUtils: HDFSUtils) {
 
         checkConfig(commandLine => {
           if (commandLine.schemaPath.nonEmpty && commandLine.schemaString.nonEmpty) failure("Specifiy either `schmeaStr` or `schemaPath`") else success
+        }),
+        checkConfig(commandLine => {
+          if(commandLine.fromDate != null && commandLine.toDate == null || commandLine.fromDate == null && commandLine.toDate != null)
+            failure("Specify `fromDate` and `toDate` both or neither of them")
+          else success
         })
       )
 
