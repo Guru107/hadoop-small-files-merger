@@ -10,22 +10,44 @@ plugins {
     // Apply the scala plugin to add support for Scala
     id 'scala'
     id 'idea'
+    id 'application'
 }
 
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+    mavenCentral()
+}
+def scalaVersion = "2.11"
+def sparkVersion = "2.3.0"
+
+application {
+
+    mainClassName = "hadoop.small.files.merger.HDFSFileMerger"
+}
+
+jar {
+    manifest {
+        attributes "Main-Class":"hadoop.small.files.merger.HDFSFileMerger"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 dependencies {
     // Use Scala 2.11 in our library project
     implementation 'org.scala-lang:scala-library:2.11.8'
+    compileOnly "org.apache.spark:spark-core_$scalaVersion:$sparkVersion"
+    compileOnly "org.apache.spark:spark-sql_$scalaVersion:$sparkVersion"
+    compile "com.databricks:spark-avro_$scalaVersion:4.0.0"
+    compile "com.github.scopt:scopt_$scalaVersion:3.7.1"
 
     // Use Scalatest for testing our library
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.scalatest:scalatest_2.12:3.0.5'
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.scalatest:scalatest_$scalaVersion:3.0.5"
 
     // Need scala-xml at test runtime
-    testRuntimeOnly 'org.scala-lang.modules:scala-xml_2.12:1.1.1'
+    testRuntimeOnly "org.scala-lang.modules:scala-xml_$scalaVersion:1.1.1"
 }
