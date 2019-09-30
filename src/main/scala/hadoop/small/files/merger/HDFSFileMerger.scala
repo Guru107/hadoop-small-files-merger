@@ -3,7 +3,6 @@
  */
 package hadoop.small.files.merger
 
-import java.io.FileNotFoundException
 import java.util.Calendar
 
 import com.databricks.spark.avro._
@@ -31,10 +30,10 @@ object HDFSFileMerger extends App {
               val date = Calendar.getInstance()
               date.setTimeInMillis(dayEpoch)
               val fullDirectoryPath = commandLine.getDatePartitionedPath(config, date)
-              mergeAvroDirectory(sparkSession,hdfsUtils,config,fullDirectoryPath,schema)
+              mergeAvroDirectory(sparkSession, hdfsUtils, config, fullDirectoryPath, schema)
             })
-        } else if(config.directory.nonEmpty && hdfsUtils.exists(config.directory)){
-          mergeAvroDirectory(sparkSession,hdfsUtils,config,config.directory,schema)
+        } else if (config.directory.nonEmpty && hdfsUtils.exists(config.directory)) {
+          mergeAvroDirectory(sparkSession, hdfsUtils, config, config.directory, schema)
         } else {
           commandLine.parser.renderTwoColumnsUsage
         }
@@ -46,7 +45,7 @@ object HDFSFileMerger extends App {
   }
 
 
-  def mergeAvroDirectory(sparkSession: SparkSession,hdfsUtils: HDFSUtils,commandLineArgs: CommandLineArgs,directoryPath: String,schema: String): Unit = {
+  def mergeAvroDirectory(sparkSession: SparkSession, hdfsUtils: HDFSUtils, commandLineArgs: CommandLineArgs, directoryPath: String, schema: String): Unit = {
 
     if (hdfsUtils.exists(directoryPath)) {
       val directorySize = hdfsUtils.getDirectorySize(directoryPath)
