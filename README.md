@@ -5,7 +5,7 @@ A Spark application to merge small files
 Hadoop Small Files Merger Application
 Usage: hadoop-small-files-merger.jar [options]
 
-  -b, --blockSize <value>  Specify your clusters blockSize in bytes, Default is set at 132120576
+  -b, --blockSize <value>  Specify your clusters blockSize in bytes, Default is set at 131072000
   -f, --format Values: avro
                            
   -d, --directory <value>  Starting with hdfs:///
