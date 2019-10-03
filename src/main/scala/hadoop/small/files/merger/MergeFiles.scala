@@ -26,13 +26,16 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
 
     if (_arguments.fromDate != null && _arguments.toDate != null && _arguments.directory.nonEmpty) {
       (_arguments.fromDate.getTimeInMillis until _arguments.toDate.getTimeInMillis)
-        .by(partitionBy) //Increment by a day
+        .by(partitionBy)
         .foreach(epoch => {
           val date = Calendar.getInstance()
           date.setTimeInMillis(epoch)
           val fullDirectoryPath = s"${_arguments.directory}${_arguments.datePartitionFormat.format(date.getTime)}"
+
           if (_hdfsUtils.exists(fullDirectoryPath)) {
             val partitionSize = getPartitionSize(fullDirectoryPath)
+            println(s"Current Directory: $fullDirectoryPath")
+            println(s"Number of write partitions: ${partitionSize}")
             _arguments.format match {
               case "avro" => {
                 mergeAvroDirectory(fullDirectoryPath, schema, partitionSize)
@@ -46,6 +49,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
         })
     } else {
       val partitionSize = getPartitionSize(_arguments.directory)
+      println(s"Number of write partitions: ${partitionSize}")
       _arguments.format match {
         case "avro" => mergeAvroDirectory(_arguments.directory, schema, partitionSize)
         case "text" => mergeTextDirectory(_arguments.directory, partitionSize)
@@ -69,11 +73,13 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .text(directoryPath)
       .repartition(partitionSize)
       .write
+      .option("compression","snappy")
       .text(s"${directoryPath}_merged")
   }
 
   private def getPartitionSize(directoryPath: String): Int = {
     val directorySize = _hdfsUtils.getDirectorySize(directoryPath)
+    println(s"Directory Size In Bytes: ${directorySize}")
     val blockSize = commandLineArgs.blockSize
     val partitionSize = {
       if (directorySize <= blockSize) 1

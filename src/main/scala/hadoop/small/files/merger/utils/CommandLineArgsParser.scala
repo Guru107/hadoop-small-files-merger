@@ -62,10 +62,10 @@ class CommandLineArgsParser {
           }).action((fmt, commandLineArgs) => commandLineArgs.copy(datePartitionFormat = new SimpleDateFormat(fmt))),
 
         checkConfig(commandLine => {
-          if (commandLine.schemaPath.nonEmpty && commandLine.schemaString.nonEmpty) failure("Specifiy either `schmeaStr` or `schemaPath`") else success
+          if (commandLine.format.contentEquals("avro") && commandLine.schemaPath.length == 0 && commandLine.schemaString.length == 0) failure("Specifiy either `schmeaStr` or `schemaPath`") else success
         }),
         checkConfig(commandLine => {
-          if (commandLine.fromDate == null || commandLine.toDate == null)
+          if (commandLine.fromDate == null &&  commandLine.toDate != null || commandLine.toDate == null && commandLine.fromDate != null)
             failure("Specify `fromDate` and `toDate` both or neither of them")
           else success
         })
