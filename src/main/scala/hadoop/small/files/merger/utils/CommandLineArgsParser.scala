@@ -16,7 +16,7 @@ class CommandLineArgsParser {
 
     opt[String]('f', "format")
       .required()
-      .valueName("Values: avro,text")
+      .valueName("Values: avro,text,parquet")
       .action((format, commandLineOpts) => commandLineOpts.copy(format = format))
       .children(
         opt[String]('d', "directory")

@@ -43,6 +43,9 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
               case "text" => {
                 mergeTextDirectory(fullDirectoryPath, partitionSize)
               }
+              case "parquet" => {
+                mergeParquetDirectory(fullDirectoryPath,partitionSize)
+              }
             }
             cleanUpOldDirectory(fullDirectoryPath)
           }
@@ -53,6 +56,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       _arguments.format match {
         case "avro" => mergeAvroDirectory(_arguments.directory, schema, partitionSize)
         case "text" => mergeTextDirectory(_arguments.directory, partitionSize)
+        case "parquet" => mergeParquetDirectory(_arguments.directory,partitionSize)
       }
     }
   }
@@ -76,6 +80,16 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .write
       .option("compression",_arguments.compression)
       .text(s"${directoryPath}_merged")
+  }
+
+  private def mergeParquetDirectory(directoryPath: String, partitionSize: Int): Unit = {
+    _sparkSession
+      .read
+      .parquet(directoryPath)
+      .repartition(partitionSize)
+      .write
+      .option("compression",_arguments.compression)
+      .parquet(s"${directoryPath}_merged")
   }
 
   private def getPartitionSize(directoryPath: String): Int = {
