@@ -6,7 +6,7 @@ Hadoop Small Files Merger Application
 Usage: hadoop-small-files-merger.jar [options]
 
   -b, --blockSize <value>  Specify your clusters blockSize in bytes, Default is set at 131072000
-  -f, --format Values: avro
+  -f, --format Values: avro,text
                            
   -d, --directory <value>  Starting with hdfs:///
   -s, --schemaStr <value>  A stringified avro schema
