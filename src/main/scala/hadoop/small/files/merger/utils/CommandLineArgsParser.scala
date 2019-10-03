@@ -23,6 +23,10 @@ class CommandLineArgsParser {
           .text("Starting with hdfs:///")
           .required()
           .action((directory, commandLineArgs) => commandLineArgs.copy(directory)),
+        opt[String]('c',"compression")
+            .valueName("Values: `none`, `snappy`, `gzip`, and `lzo`. Default: none")
+            .text("Compression for the merged files")
+            .action((compression,commandLineArgs) => commandLineArgs.copy(compression = compression)),
         opt[String]('s', "schemaStr")
           .text("A stringified avro schema")
           .optional()
