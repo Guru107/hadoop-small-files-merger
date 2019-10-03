@@ -64,6 +64,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .avro(directoryPath)
       .repartition(partitionSize)
       .write
+      .option("compression",_arguments.compression)
       .avro(s"${directoryPath}_merged")
   }
 
@@ -73,7 +74,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .text(directoryPath)
       .repartition(partitionSize)
       .write
-      .option("compression","snappy")
+      .option("compression",_arguments.compression)
       .text(s"${directoryPath}_merged")
   }
 
