@@ -11,7 +11,7 @@ class CommandLineArgsParser {
 
     opt[Long]('b', "blockSize")
       .optional()
-      .text("Specify your clusters blockSize in bytes, Default is set at 131072000 (125MB) which is slightly less than actual 128MB block size. It is intentionally kept at 125MB to fit the data of the single partition into a block of 128MB. As spark does not create exact file sizes after partitioning but will always be approximately equal to the specified block size.")
+      .text("Specify your clusters blockSize in bytes, Default is set at 131072000 (125MB) \n\t\t\t\t\t\t   which is slightly less than actual 128MB block size.\n\t\t\t\t\t\t   It is intentionally kept at 125MB to fit the data of the single partition into a block of 128MB.\n\t\t\t\t\t\t   As spark does not create exact file sizes after partitioning but will always be approximately equal to the specified block size.")
       .action((blockSize, commandLineOpts) => commandLineOpts.copy(blockSize = blockSize))
 
     opt[String]('f', "format")
@@ -25,7 +25,6 @@ class CommandLineArgsParser {
           .action((directory, commandLineArgs) => commandLineArgs.copy(directory)),
         opt[String]('c', "compression")
           .valueName("Values: `none`, `snappy`, `gzip`, and `lzo`. Default: none")
-          .text("Compression for the merged files")
           .action((compression, commandLineArgs) => commandLineArgs.copy(compression = compression)),
         opt[String]('s', "schemaStr")
           .text("A stringified avro schema")
@@ -55,7 +54,7 @@ class CommandLineArgsParser {
           .action((partitionBy, commandLineArgs) => commandLineArgs.copy(partitionBy = partitionBy)),
         opt[String]("partitionFormat")
           .optional()
-          .text("Give directory partition format using valid SimpleDateFormat pattern Eg. \"'/year='yyyy'/month='MM'/day='dd\", \"'/'yyyy'/'MM'/'dd\"")
+          .text("Give directory partition format using valid SimpleDateFormat pattern \n\t\t\t\t\t\t   Eg. \"'/year='yyyy'/month='MM'/day='dd\", \"'/'yyyy'/'MM'/'dd\"")
           .validate(partitionFormat => {
             try {
               new SimpleDateFormat(partitionFormat)
