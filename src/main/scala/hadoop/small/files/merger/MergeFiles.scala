@@ -22,7 +22,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       avroUtils.getSchema(_arguments.schemaPath, _arguments.schemaString)
     } else ""
 
-    val partitionBy = if(_arguments.partitionBy.equalsIgnoreCase("day")) 86400000 else 3600000
+    val partitionBy = if (_arguments.partitionBy.equalsIgnoreCase("day")) 86400000 else 3600000
 
     if (_arguments.fromDate != null && _arguments.toDate != null && _arguments.directory.nonEmpty) {
       (_arguments.fromDate.getTimeInMillis until _arguments.toDate.getTimeInMillis)
@@ -43,8 +43,11 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
               case "text" => {
                 mergeTextDirectory(fullDirectoryPath, partitionSize)
               }
+              case "parquet" => {
+                mergeParquetDirectory(fullDirectoryPath, partitionSize)
+              }
             }
-            cleanUpOldDirectory(fullDirectoryPath)
+
           }
         })
     } else {
@@ -53,6 +56,7 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       _arguments.format match {
         case "avro" => mergeAvroDirectory(_arguments.directory, schema, partitionSize)
         case "text" => mergeTextDirectory(_arguments.directory, partitionSize)
+        case "parquet" => mergeParquetDirectory(_arguments.directory, partitionSize)
       }
     }
   }
@@ -64,8 +68,22 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .avro(directoryPath)
       .repartition(partitionSize)
       .write
-      .option("compression",_arguments.compression)
+      .option("compression", _arguments.compression)
       .avro(s"${directoryPath}_merged")
+
+    cleanUpOldDirectory(directoryPath)
+  }
+
+  private def cleanUpOldDirectory(directoryPath: String): Unit = {
+    if (_hdfsUtils.renameDir(directoryPath, s"${directoryPath}_bak")) {
+      println("Source Directory renamed")
+      if (_hdfsUtils.renameDir(s"${directoryPath}_merged", directoryPath)) {
+        println("Merged Directory renamed")
+        if (_hdfsUtils.moveToTrash(s"${directoryPath}_bak")) {
+          println(s"Moved ${directoryPath}_bak to trash")
+        }
+      }
+    }
   }
 
   private def mergeTextDirectory(directoryPath: String, partitionSize: Int): Unit = {
@@ -74,8 +92,20 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       .text(directoryPath)
       .repartition(partitionSize)
       .write
-      .option("compression",_arguments.compression)
+      .option("compression", _arguments.compression)
       .text(s"${directoryPath}_merged")
+    cleanUpOldDirectory(directoryPath)
+  }
+
+  private def mergeParquetDirectory(directoryPath: String, partitionSize: Int): Unit = {
+    _sparkSession
+      .read
+      .parquet(directoryPath)
+      .repartition(partitionSize)
+      .write
+      .option("compression", _arguments.compression)
+      .parquet(s"${directoryPath}_merged")
+    cleanUpOldDirectory(directoryPath)
   }
 
   private def getPartitionSize(directoryPath: String): Int = {
@@ -93,17 +123,5 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
       }
     }
     partitionSize
-  }
-
-  private def cleanUpOldDirectory(directoryPath: String): Unit = {
-    if (_hdfsUtils.renameDir(directoryPath, s"${directoryPath}_bak")) {
-      println("Source Directory renamed")
-      if (_hdfsUtils.renameDir(s"${directoryPath}_merged", directoryPath)) {
-        println("Merged Directory renamed")
-        if (_hdfsUtils.moveToTrash(s"${directoryPath}_bak")) {
-          println(s"Moved ${directoryPath}_bak to trash")
-        }
-      }
-    }
   }
 }
