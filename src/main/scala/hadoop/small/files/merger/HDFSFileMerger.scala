@@ -3,10 +3,8 @@
  */
 package hadoop.small.files.merger
 
-import java.util.Calendar
 
-import com.databricks.spark.avro._
-import hadoop.small.files.merger.utils.{CommandLineArgs, CommandLineArgsParser, HDFSUtils}
+import hadoop.small.files.merger.utils.{CommandLineArgs, CommandLineArgsParser}
 import org.apache.spark.sql.SparkSession
 
 
@@ -18,9 +16,8 @@ object HDFSFileMerger extends App {
     .parser
     .parse(args, new CommandLineArgs) match {
     case Some(config) => {
-
       val sparkSession: SparkSession = SparkSession.builder().getOrCreate()
-      val mergeFiles = new MergeFiles(sparkSession,config)
+      val mergeFiles = new MergeFiles(sparkSession, config)
       mergeFiles.start()
 
     }

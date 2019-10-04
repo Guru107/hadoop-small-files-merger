@@ -23,10 +23,10 @@ class CommandLineArgsParser {
           .text("Starting with hdfs:///")
           .required()
           .action((directory, commandLineArgs) => commandLineArgs.copy(directory)),
-        opt[String]('c',"compression")
-            .valueName("Values: `none`, `snappy`, `gzip`, and `lzo`. Default: none")
-            .text("Compression for the merged files")
-            .action((compression,commandLineArgs) => commandLineArgs.copy(compression = compression)),
+        opt[String]('c', "compression")
+          .valueName("Values: `none`, `snappy`, `gzip`, and `lzo`. Default: none")
+          .text("Compression for the merged files")
+          .action((compression, commandLineArgs) => commandLineArgs.copy(compression = compression)),
         opt[String]('s', "schemaStr")
           .text("A stringified avro schema")
           .optional()
@@ -69,7 +69,7 @@ class CommandLineArgsParser {
           if (commandLine.format.contentEquals("avro") && commandLine.schemaPath.length == 0 && commandLine.schemaString.length == 0) failure("Specifiy either `schmeaStr` or `schemaPath`") else success
         }),
         checkConfig(commandLine => {
-          if (commandLine.fromDate == null &&  commandLine.toDate != null || commandLine.toDate == null && commandLine.fromDate != null)
+          if (commandLine.fromDate == null && commandLine.toDate != null || commandLine.toDate == null && commandLine.fromDate != null)
             failure("Specify `fromDate` and `toDate` both or neither of them")
           else success
         })
