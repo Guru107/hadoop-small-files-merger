@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: GitHub Community Forum
-    url: https://github.community/
-    about: Please ask and answer questions here.
-  - name: GitHub Security Bug Bounty
-    url: https://bounty.github.com/
-    about: Please report security vulnerabilities here.
+  - name: Hudi Mailing List
+    url: dev-subscribe@hudi.apache.org
+    about: Subscribe to hudi mailing list to get all the updates regarding code contribution.
+  - name: Hudi JIRA Board
+    url: https://issues.apache.org/jira/projects/HUDI
+    about: Reporting bugs on JIRA board helps us better track the issue. But it is not manditory as of now.
