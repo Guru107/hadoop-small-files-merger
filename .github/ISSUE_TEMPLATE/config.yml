@@ -5,4 +5,3 @@ contact_links:
     about: Do checkout frequently asked questions before filing an issue.
   - name: Hudi JIRA Board
     url: https://issues.apache.org/jira/projects/HUDI
-    about: Reporting bugs on JIRA board helps us better track the issue. But it is not manditory as of now. 
