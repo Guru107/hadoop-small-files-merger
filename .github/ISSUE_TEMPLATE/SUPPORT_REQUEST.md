@@ -39,4 +39,4 @@ Add any other context about the problem here.
 
 **Stacktrace**
 
-Add the stacktrace of the error.
+```Add the stacktrace of the error.```
