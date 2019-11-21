@@ -3,7 +3,6 @@ name: Support Request
 about: Report an issue faced while using Hudi
 title: '[Support]'
 labels: question
-assignees: ''
 
 ---
 
