@@ -1,33 +1,6 @@
 ---
 name: Support Request
 about: Report an issue faced while using Hudi
-title: '[Support]'
-labels: question
-
----
-
-**Describe the problem you faced**
-
-A clear and concise description of the problem.
-
-**To Reproduce**
-
-Steps to reproduce the behavior:
-
-1.
-2.
-3.
-4.
-
-**Expected behavior**
-
-A clear and concise description of what you expected to happen.
-
-**Environment Description**
-
----
-name: Support Request
-about: Report an issue faced while using Hudi
 title: '[SUPPORT]'
 labels: question
 
@@ -42,9 +15,11 @@ labels: question
 - If you have triaged this as a bug, then file an [issue](https://issues.apache.org/jira/projects/HUDI/issues) directly.
 
 **Describe the problem you faced**
+
 A clear and concise description of the problem.
 
 **To Reproduce**
+
 Steps to reproduce the behavior:
 
 1.
@@ -53,6 +28,7 @@ Steps to reproduce the behavior:
 4.
 
 **Expected behavior**
+
 A clear and concise description of what you expected to happen.
 
 **Environment Description**
@@ -78,13 +54,3 @@ Add any other context about the problem here.
 
 ```Add the stacktrace of the error.```
 
-
-
-
-**Additional context**
-
-Add any other context about the problem here.
-
-**Stacktrace**
-
-```Add the stacktrace of the error.```
