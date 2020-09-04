@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 def scalaVersion = "2.11"
-def sparkVersion = "2.3.0"
+def sparkVersion = "2.4.0"
 
 application {
 
@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.scala-lang:scala-library:2.11.8'
     compileOnly "org.apache.spark:spark-core_$scalaVersion:$sparkVersion"
     compileOnly "org.apache.spark:spark-sql_$scalaVersion:$sparkVersion"
-    compile "com.databricks:spark-avro_$scalaVersion:4.0.0"
+    compile "org.apache.spark:spark-avro_$scalaVersion:$sparkVersion"
     compile "com.github.scopt:scopt_$scalaVersion:3.7.1"
 
     // Use Scalatest for testing our library

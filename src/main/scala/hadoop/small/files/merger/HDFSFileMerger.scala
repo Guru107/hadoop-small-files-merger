@@ -17,6 +17,7 @@ object HDFSFileMerger extends App {
     .parse(args, new CommandLineArgs) match {
     case Some(config) => {
       val sparkSession: SparkSession = SparkSession.builder().getOrCreate()
+      sparkSession.sparkContext.setLogLevel("WARN")
       val mergeFiles = new MergeFiles(sparkSession, config)
       mergeFiles.start()
 

@@ -2,7 +2,7 @@ package hadoop.small.files.merger
 
 import java.util.Calendar
 
-import com.databricks.spark.avro._
+
 import hadoop.small.files.merger.utils.{CommandLineArgs, HDFSUtils}
 import org.apache.spark.sql.SparkSession
 
@@ -62,16 +62,26 @@ class MergeFiles(sparkSession: SparkSession, commandLineArgs: CommandLineArgs) {
   }
 
   private def mergeAvroDirectory(directoryPath: String, schema: String, partitionSize: Int): Unit = {
-    _sparkSession
-      .read
-      .option("avroSchema", schema)
-      .avro(directoryPath)
-      .repartition(partitionSize)
-      .write
-      .option("compression", _arguments.compression)
-      .avro(s"${directoryPath}_merged")
+    try{
+      _sparkSession
+        .read
+        .option("avroSchema", schema)
+        .format("avro")
+        .load(directoryPath)
+        .repartition(partitionSize)
+        .write
+        .option("compression", _arguments.compression)
+        .format("avro")
+        .save(s"${directoryPath}_merged")
 
-    cleanUpOldDirectory(directoryPath)
+      cleanUpOldDirectory(directoryPath)
+    } catch {
+      case e: Exception => {
+        e.printStackTrace()
+        throw e
+      }
+    }
+
   }
 
   private def cleanUpOldDirectory(directoryPath: String): Unit = {

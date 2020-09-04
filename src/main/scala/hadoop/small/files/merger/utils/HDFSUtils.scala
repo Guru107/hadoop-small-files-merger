@@ -2,10 +2,12 @@ package hadoop.small.files.merger.utils
 
 import java.io.{FileNotFoundException, StringWriter}
 
+import org.apache.avro.file.DataFileReader
+import org.apache.avro.generic.{GenericDatumReader, GenericRecord}
 import org.apache.commons.io.IOUtils
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.{FSDataInputStream, FileSystem, Path, Trash}
-
+import org.apache.hadoop.fs.{FSDataInputStream, FileSystem, Path, PathFilter, Trash}
+import org.apache.avro.mapred.FsInput
 
 class HDFSUtils() {
   private val hdfsConfig: Configuration = new Configuration()
